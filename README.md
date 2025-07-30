@@ -6,7 +6,7 @@ Problems:
 * Problem 1: Over- and misuse of dependency management.
 * Problem 2: Limiting resolution (ie. "define resolvable space")
 * Problem 3: Rogue dependencies.
-* Problem 4: Performance and security issues due 1 and 2.
+* Problem 4: Performance and security issues due 1, 2 and 3.
 
 ## Problem 1
 
