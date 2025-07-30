@@ -4,7 +4,7 @@
 
 Problems:
 * Problem 1: Over- and misuse of dependency management.
-* Problem 2: Augmenting resolution (ie. "define resolvable space" or "pass on extra info")
+* Problem 2: Augmenting resolution (i.e. "define resolvable space" or "pass on extra info")
 * Problem 3: Rogue dependencies.
 * Problem 4: Performance and security issues due 1, 2 and 3.
 
@@ -27,12 +27,12 @@ Conclusion:
 * Large scale (huge) BOMs are just bad: they clog Maven and Resolver for "what if it is used downstream".
   Is like shooting with a cannon onto mouse. Lumps "everything" onto consumer projects thay may want
   only tiny portion of it.
-* THe **`import`** scope hack is bad, many times confuses users. Moreover, the `import` scope 
-  **does not and never did** work in "Maven way" (it is first comes wins instead).
+* The **`import`** scope hack is bad, and too many times confuses users, even experienced ones. Moreover, 
+  the `import` scope **does not and never did** work in "Maven way" (it is first comes wins).
 
 ## Problem 2
 
-Consider Maven Plugins: each one was fully resolved, just to be embedded and run within Maven
+Consider Maven Plugins: originally each one was fully resolved, just to be embedded and run within Maven
 you are running. Long time ago, after the build, users would end up with multiple (half of dozen
 if not tens of it) versions of `maven-core` in their local repository, as each version of each plugin it depended on was
 resolved (downloaded, checksum calculated and so on) only to **be excluded** from plugin classpath
@@ -53,14 +53,18 @@ Conclusion:
   with exported packages and artifacts, that is not trivial. And this happens build time.
 * Why all this is not sorted at runtime? What if Maven would be "self-aware" of its own constituents,
   and plugin developers just depend on things they need and runtime figures out what to resolve and
-  and what not to resolve?
+  and what not to resolve? Why not generalize this?
 
 ## Problem 3
 
 You built, tested and published a library to Maven Central. Hence, you can go to sleep, right?
 
 But someone may pick up your library, with completely different setup, configuration and environment, 
-and end up with totally different outcome.
+and end up with totally different outcome. Maybe even some spoofed artifacts, due wrong repository
+ordering?
+
+You are rang for support and asked questions you cannot answer: is `foo-bar-1.0.jar` in their
+WAR the one you built against? 
 
 ## Problem 4
 
