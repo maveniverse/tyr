@@ -4,8 +4,9 @@
 
 Problems:
 * Problem 1: Over- and misuse of dependency management.
-* Problem 2: Rogue dependencies.
-* Problem 3: Performance and security issues due 1 and 2.
+* Problem 2: Limiting resolution (ie. "define resolvable space")
+* Problem 3: Rogue dependencies.
+* Problem 4: Performance and security issues due 1 and 2.
 
 ## Problem 1
 
@@ -17,10 +18,14 @@ TBD
 
 ## Problem 3
 
-Maven project received several "performance" related issues and almost all of them involved
-huge count of dependency management entries going back and forth between Maven and Resolver.
-We tried to optimize all these, applied some changes, but what if all those massive entries
-are simply gone?
+TBD
 
-With Problem 1 and Problem 2 gone, this problem is solved as well, as Maven, and especially
-Resolver simply has to "juggle" with way less memory => snappier and safer builds.
+## Problem 4
+
+Maven project received several performance related issues and almost all of them involved
+huge count of dependency management entries going back and forth between Maven and Resolver.
+We tried to optimize all these, made some improvements, but what if all those massive entries
+are simply gone, not there?
+
+With Problem 1, 2 and 3 gone, this problem is solved as well, as Maven, and especially
+Resolver simply does not have to "juggle" with huge memory/structs => snappier and safer builds.
