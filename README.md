@@ -75,3 +75,13 @@ are simply gone, not there?
 
 With Problem 1, 2 and 3 gone, this problem is solved as well, as Maven, and especially
 Resolver simply does not have to "juggle" with huge memory/structs => snappier and safer builds.
+
+## What if?
+
+What if one could:
+* provide similar functionality like BOMs are today (but without the huge overhead) and import trickery?
+* provide even more than BOMs, like augment resolution?
+* provide even more information about artifacts, like their checksums and more?
+* reuse existing BOMs even, but without overhead?
+
+Meet Týr...
