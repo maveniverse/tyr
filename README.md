@@ -25,8 +25,8 @@ distinct for each "path" in dependency graph, it basically explodes on large gra
 
 Conclusion:
 * Large scale (huge) BOMs are just bad: they clog Maven and Resolver for "what if it is used downstream".
-  Is like shooting with a cannon onto mouse. Lumps "everything" onto consumer projects thay may want
-  only tiny portion of it.
+  Is like shooting with a cannon onto mouse. Lumps "everything" onto consumer projects they may want
+  only tiny portion of it. Reading effective POMs of projects importing huge BOMs is impossible.
 * The **`import`** scope hack is bad, and too many times confuses users, even experienced ones. Moreover, 
   the `import` scope **does not and never did** work in "Maven way" (it is first comes wins).
 
