@@ -85,3 +85,92 @@ What if one could:
 * reuse existing BOMs even, but without overhead?
 
 Meet Týr...
+
+## Týr sources
+
+Týr defines "source" that contains following:
+* inventory mapping: G -> A -> V -> \[C:\]E -> data 
+* management -> G -> A -> depMgt-like data
+
+Example mapping structure (just to visualize data contents and structure):
+
+```yaml
+---
+# Týr mapping file
+version: 1.0
+
+global:
+  # management: G -> A -> depMgt-like info
+  management:
+    - junit:
+      - junit:
+        version: "1.0"
+        scope: test
+        optional: true
+        exclusions:
+          - org.hamcrest:hamcrest-core
+          - something:*
+
+  # inventory: G -> A -> V -> [C:]E -> data
+  inventory: 
+    - junit: 
+      - junit: 
+        - "1.0": 
+          - pom:
+            checksums:
+              - sha1: "abcd"
+          - jar:
+            checksums:
+              - sha1: "abcd"
+          - sources:jar:
+            checksums:
+              - sha1: "abcd"
+          - javadoc:jar:
+            checksums:
+              - sha1: "abcd"
+        - "1.1":
+          - pom:
+            checksums:
+              - sha1: "abcd"
+          - jar:
+            checksums:
+              - sha1: "abcd"
+          - sources:jar:
+            checksums:
+              - sha1: "abcd"
+          - javadoc:jar:
+            checksums:
+              - sha1: "abcd"
+    - something:
+      - else:
+        - "1.0":
+          - pom:
+            checksums:
+              - sha1: "abcd"
+          - jar:
+            checksums:
+              - sha1: "abcd"
+          - sources:jar:
+            checksums:
+              - sha1: "abcd"
+          - javadoc:jar:
+            checksums:
+              - sha1: "abcd"
+```
+
+The "data" for now is limited to checksums (those supported by Resolver), but may be later expanded.
+
+Source implementations envisioned are:
+* BOM-source: point it to BOM artifact, it will be resolved and "on the fly" conversion happens (only repository provided checksums are available)
+* Descriptor-source: point to Tyr descriptor artifact or file, and it will be (resolved if artifact) and used; descriptor may contain stronger checksums that provided by repository
+
+Tools:
+* BOM to descriptor converter Mojo (w/ options to "decorate"; for example grab checksums or even calculate strong ones)
+* Mojo that "records" build descriptor; listens to build and produces inventory, possibly even deploying it
+
+What Tyr does:
+* manages dependencies (in this case the POM will be probably unusable with vanilla Maven; lack of versions and no import BOM!)
+* "non-strict" or "strict" mode where versions are forced; and/or fail the build if out of inventory artifact met
+* enforces that build uses only verified dependencies from inventory
+* sources checksums to Resolver TC subsystem; configurable like "fail if missing"
+
