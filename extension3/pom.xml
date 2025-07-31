@@ -32,10 +32,6 @@
     </dependency>
     <dependency>
       <groupId>eu.maveniverse.maven.tyr.source</groupId>
-      <artifactId>bundle</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>eu.maveniverse.maven.tyr.source</groupId>
       <artifactId>descriptor</artifactId>
     </dependency>
 

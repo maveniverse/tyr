@@ -9,23 +9,71 @@ package eu.maveniverse.maven.tyr.shared.source;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.eclipse.aether.version.Version;
+import org.eclipse.aether.artifact.Artifact;
 
-public interface Artifacts {
-    interface GAKey {
+public final class Artifacts {
+    private Artifacts() {}
+
+    public static GAKey getGAKey(String groupId, String artifactId) {
+        return new GAKeyImpl(groupId, artifactId);
+    }
+
+    public static GAKey getGAKey(Artifact artifact) {
+        return new GAKeyImpl(artifact.getGroupId(), artifact.getArtifactId());
+    }
+
+    public static GACEKey getGACEKey(String groupId, String artifactId, String classifier, String extension) {
+        return new GACEKeyImpl(
+                groupId, artifactId, classifier == null || classifier.isBlank() ? null : classifier, extension, null);
+    }
+
+    public static GACEKey getGACEKey(Artifact artifact) {
+        return new GACEKeyImpl(
+                artifact.getGroupId(),
+                artifact.getArtifactId(),
+                artifact.getClassifier().isBlank() ? null : artifact.getClassifier(),
+                artifact.getExtension(),
+                null);
+    }
+
+    public static GACEVKey getGACEVKey(
+            String groupId, String artifactId, String classifier, String extension, String version) {
+        return new GACEKeyImpl(
+                groupId,
+                artifactId,
+                classifier == null || classifier.isBlank() ? null : classifier,
+                extension,
+                version);
+    }
+
+    public static GACEVKey getGACEVKey(Artifact artifact) {
+        return new GACEKeyImpl(
+                artifact.getGroupId(),
+                artifact.getArtifactId(),
+                artifact.getClassifier().isBlank() ? null : artifact.getClassifier(),
+                artifact.getExtension(),
+                artifact.getVersion());
+    }
+
+    public interface GAKey {
         String getGroupId();
+
         String getArtifactId();
     }
 
-    interface GACEKey extends GAKey {
+    public interface GACEKey extends GAKey {
         Optional<String> getClassifier();
+
         String getExtension();
     }
 
-    final class GAKeyImpl implements GAKey {
+    public interface GACEVKey extends GACEKey {
+        Optional<String> getVersion();
+    }
+
+    private static final class GAKeyImpl implements GAKey {
         private final String groupId;
         private final String artifactId;
         private final int hashCode;
@@ -61,19 +109,21 @@ public interface Artifacts {
         }
     }
 
-    final class GACEKeyImpl implements GACEKey {
+    private static final class GACEKeyImpl implements GACEVKey {
         private final String groupId;
         private final String artifactId;
         private final String classifier;
         private final String extension;
+        private final String version;
         private final int hashCode;
 
-        private GACEKeyImpl(String groupId, String artifactId, String classifier, String extension) {
+        private GACEKeyImpl(String groupId, String artifactId, String classifier, String extension, String version) {
             this.groupId = requireNonNull(groupId);
             this.artifactId = requireNonNull(artifactId);
             this.classifier = classifier;
             this.extension = requireNonNull(extension);
-            this.hashCode = Objects.hash(groupId, artifactId, classifier, extension);
+            this.version = version;
+            this.hashCode = Objects.hash(groupId, artifactId, classifier, extension, version);
         }
 
         @Override
@@ -97,6 +147,11 @@ public interface Artifacts {
         }
 
         @Override
+        public Optional<String> getVersion() {
+            return Optional.ofNullable(version);
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (o == null || getClass() != o.getClass()) {
                 return false;
@@ -111,36 +166,6 @@ public interface Artifacts {
         @Override
         public int hashCode() {
             return hashCode;
-        }
-    }
-
-    class Info {
-        private final Version version;
-        private final String classifier;
-        private final String extension;
-        private final Map<String, String> checksums;
-
-        private Info(String classifier, String extension, Version version, Map<String, String> checksums) {
-            this.classifier = classifier; // optional
-            this.extension = requireNonNull(extension);
-            this.version = requireNonNull(version);
-            this.checksums = requireNonNull(checksums);
-        }
-
-        public Optional<String> getClassifier() {
-            return Optional.ofNullable(classifier);
-        }
-
-        public String getExtension() {
-            return extension;
-        }
-
-        public Version getVersion() {
-            return version;
-        }
-
-        public Map<String, String> getChecksums() {
-            return checksums;
         }
     }
 }

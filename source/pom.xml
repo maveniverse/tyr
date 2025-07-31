@@ -25,7 +25,6 @@
 
   <modules>
     <module>bom</module>
-    <module>bundle</module>
     <module>descriptor</module>
   </modules>
 

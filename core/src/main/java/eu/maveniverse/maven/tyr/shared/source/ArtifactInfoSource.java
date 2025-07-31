@@ -7,35 +7,30 @@
  */
 package eu.maveniverse.maven.tyr.shared.source;
 
-import org.eclipse.aether.artifact.Artifact;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.version.Version;
 
-import java.util.Collection;
-import java.util.Optional;
-
 public interface ArtifactInfoSource {
-    enum Mode {
-        ADVISORY,
-        STRICT
-    }
+    /**
+     * Returns the "enlisted versions" for given {@link Artifacts.GAKey}.
+     */
+    Optional<Collection<Version>> getVersions(Artifacts.GAKey ga);
 
     /**
-     * Source mode.
+     * Returns "data" map for given {@link Artifacts.GAKey}.
      */
-    Mode getMode();
-
-    Optional<Version> getVersion(Artifacts.GAKey ga);
-
-    Optional<Artifacts.Info> getInfo(Artifacts.GACEKey gace);
+    Optional<Map<String, String>> getData(Artifacts.GAKey ga);
 
     /**
-     * Returns {@code true} if given artifact is contained in existing sources.
+     * Returns the dependency management for given {@link Artifacts.GACEKey}.
      */
-    boolean contains(Artifact artifact);
+    Optional<Dependency> getArtifactManagement(Artifacts.GACEKey key);
 
-    boolean containsVersion(Artifact artifact, String version);
-
-    Collection<Version> versions(Artifacts.GAKey ga);
-
-    Collection<Version> versions(Artifact artifact);
+    /**
+     * Returns "data" map for given {@link Artifacts.GACEKey} and name.
+     */
+    Optional<Map<String, String>> getArtifactData(Artifacts.GACEKey gace, String name);
 }
